@@ -1,0 +1,49 @@
+import cv2
+from pyzbar.pyzbar import decode
+
+
+def read_qr_code(path: str):
+    """
+    Read data from QR code using image file and cv2 library.
+    """
+    image = cv2.imread(path)
+    cv2.imshow("img", image)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+    detector = cv2.QRCodeDetector()
+    data, _, _ = detector.detectAndDecode(image)
+
+    return data
+
+
+def display_qr_code_data(qr_data):
+    print(f"Detected qr code payload: {qr_data}\n")
+
+
+def read_bar_code(path: str):
+    """
+    Read data from QR code and bar code using image file and pyzbar library.
+    """
+    capture = cv2.VideoCapture(path)
+    status, data = capture.read()
+    print(f'Status of cv video capture conversion: {status}')
+
+    if status:
+        barcodes = decode(data)
+
+        for barcode in barcodes:
+            print(f"Decoded code type: {barcode.type}")
+            print(f"Decoded code payload: {barcode.data.decode('utf-8')}\n")
+    else:
+        print('Not any barcode detected!')
+
+
+if __name__ == '__main__':
+
+    qr_code_file_path = r"C:\Users\BNS\Downloads\qr_bar.jpg"
+    bar_code_file_path = r"C:\Users\BNS\Downloads\qr_bar.jpg"
+
+    qr_code_data = read_qr_code(qr_code_file_path)
+    display_qr_code_data(qr_code_data)
+    read_bar_code(bar_code_file_path)
+
